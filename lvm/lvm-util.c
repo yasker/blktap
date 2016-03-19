@@ -150,7 +150,7 @@ lvm_open_vg(const char *vgname, struct vg *vg)
 
 	memset(vg, 0, sizeof(*vg));
 
-	err = asprintf(&cmd, buf);
+	err = asprintf(&cmd, "%s", buf);
 
 	if (err == -1)
 		return -ENOMEM;
@@ -259,7 +259,7 @@ lvm_scan_lvs(struct vg *vg)
 		return err;
 	}
 
-	err = asprintf(&cmd, buf);
+	err = asprintf(&cmd, "%s", buf);
 
 	if (err == -1)
 		return -ENOMEM;

@@ -43,8 +43,9 @@ tap_ctl_check_blktap(const char **msg)
 	}
 
 	while (fscanf(f, "%d %32s", &minor, name) == 2) {
-		if (!strcmp(name, BLKTAP2_CONTROL_NAME))
+		if (!strcmp(name, BLKTAP2_CONTROL_NAME)) {
 			goto out;
+		}
 	}
 
 	err = -ENOSYS;

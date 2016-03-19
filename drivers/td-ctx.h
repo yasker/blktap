@@ -38,75 +38,78 @@
  * bottom line is that if we use one VBD per tapdisk this functionality is
  * unnecessary.
  */
-struct td_xenio_ctx {
-    char *pool; /* TODO rename to pool_name */
-
-    /**
-     * Handle to the grant table driver.
-     */
-    xc_gnttab *xcg_handle;
-
-    /**
-     * Handle to the event channel driver.
-     */
-    xc_evtchn *xce_handle;
-
-    /**
-     * Return value of tapdisk_server_register_event, we use this to tell
-     * whether the context is registered.
-     */
-    event_id_t ring_event;
-
-    /**
-     * block interfaces in this pool
-     */
-    struct list_head blkifs;
-
-    /**
-     * Allow struct td_xenio_ctx to be part of a linked list.
-     */
-    struct list_head entry;
-
-    int gntdev_fd;
-};
-
-/**
- * Retrieves the context corresponding to the specified pool name, creating it
- * if it doesn't already exist.
- *
- * @returns 0 on success, -errno on error
- */
-int
-tapdisk_xenio_ctx_get(const char *pool, struct td_xenio_ctx ** _ctx);
-
-/**
- * Releases the pool, only if there is no block interface using it.
- */
-void
-tapdisk_xenio_ctx_put(struct td_xenio_ctx * ctx);
-
-/**
- * Process requests on the ring, if any.
- */
-void
-tapdisk_xenio_ctx_process_ring(struct td_xenblkif *blkif,
-		struct td_xenio_ctx *ctx, int final);
-
-/**
- * List of contexts.
- */
-extern struct list_head _td_xenio_ctxs;
-
-/**
- * For each block interface of this context...
- */
+//struct td_xenio_ctx {
+//    char *pool; /* TODO rename to pool_name */
+//
+//    /**
+//     * Handle to the grant table driver.
+//     */
+//    xc_gnttab *xcg_handle;
+//
+//    /**
+//     * Handle to the event channel driver.
+//     */
+//    xc_evtchn *xce_handle;
+//
+//    /**
+//     * Return value of tapdisk_server_register_event, we use this to tell
+//     * whether the context is registered.
+//     */
+//    event_id_t ring_event;
+//
+//    /**
+//     * block interfaces in this pool
+//     */
+//    struct list_head blkifs;
+//
+//    /**
+//     * Allow struct td_xenio_ctx to be part of a linked list.
+//     */
+//    struct list_head entry;
+//
+//    int gntdev_fd;
+//};
+//
+///**
+// * Retrieves the context corresponding to the specified pool name, creating it
+// * if it doesn't already exist.
+// *
+// * @returns 0 on success, -errno on error
+// */
+//int
+//tapdisk_xenio_ctx_get(const char *pool, struct td_xenio_ctx ** _ctx);
+//
+///**
+// * Releases the pool, only if there is no block interface using it.
+// */
+//void
+//tapdisk_xenio_ctx_put(struct td_xenio_ctx * ctx);
+//
+///**
+// * Process requests on the ring, if any.
+// */
+//void
+//tapdisk_xenio_ctx_process_ring(struct td_xenblkif *blkif,
+//		struct td_xenio_ctx *ctx, int final);
+//
+///**
+// * List of contexts.
+// */
+//extern struct list_head _td_xenio_ctxs;
+//
+///**
+// * For each block interface of this context...
+// */
+/*
 #define tapdisk_xenio_for_each_blkif(_blkif, _ctx)	\
 	list_for_each_entry(_blkif, &(_ctx)->blkifs, entry_ctx)
-
-/**
- * Search this context for the block interface for which the condition is true.
- * Dead block interfaces are ignored.
- */
+	*/
+//
+///**
+// * Search this context for the block interface for which the condition is true.
+// * Dead block interfaces are ignored.
+// */
+/*
 #define tapdisk_xenio_ctx_find_blkif(_ctx, _blkif, _cond)	\
 	do {													\
 		int found = 0;										\
@@ -119,5 +122,5 @@ extern struct list_head _td_xenio_ctxs;
 		if (!found)											\
 			_blkif = NULL;									\
 	} while (0)
-
+*/
 #endif /* __TD_CTX_H__ */

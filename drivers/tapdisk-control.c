@@ -813,7 +813,7 @@ tapdisk_control_close_image(struct tapdisk_ctl_conn *conn,
 {
 	td_vbd_t *vbd;
 	int err = 0;
-    struct td_xenblkif *blkif, *_blkif;
+    //struct td_xenblkif *blkif, *_blkif;
 
     ASSERT(conn);
     ASSERT(request);
@@ -837,18 +837,18 @@ tapdisk_control_close_image(struct tapdisk_ctl_conn *conn,
 	}
 
     err = 0;
-    list_for_each_entry_safe(blkif, _blkif, &vbd->rings, entry) {
-
-        DPRINTF("implicitly disconnecting ring %p domid=%d, devid=%d\n",
-                blkif, blkif->domid, blkif->devid);
-
-        err = tapdisk_xenblkif_disconnect(blkif->domid, blkif->devid);
-        if (unlikely(err)) {
-            EPRINTF("failed to disconnect ring %p: %s\n",
-                    blkif, strerror(-err));
-            break;
-        }
-    }
+//    list_for_each_entry_safe(blkif, _blkif, &vbd->rings, entry) {
+//
+//        DPRINTF("implicitly disconnecting ring %p domid=%d, devid=%d\n",
+//                blkif, blkif->domid, blkif->devid);
+//
+//        err = tapdisk_xenblkif_disconnect(blkif->domid, blkif->devid);
+//        if (unlikely(err)) {
+//            EPRINTF("failed to disconnect ring %p: %s\n",
+//                    blkif, strerror(-err));
+//            break;
+//        }
+//    }
 
     if (unlikely(err))
         goto out;
@@ -1080,88 +1080,88 @@ out:
  * This is the entry point for connecting the tapdisk to the shared ring. It
  * also sets up the necessary structures/descriptors (TODO explain).
  */
-static int
-tapdisk_control_xenblkif_connect(
-        struct tapdisk_ctl_conn *conn __attribute__((unused)),
-        tapdisk_message_t *request, tapdisk_message_t * const response)
-{
-    /*
-     * Get the block interface parameters (domain ID, device ID, etc.).
-     */
-    tapdisk_message_blkif_t *blkif;
-
-    td_vbd_t *vbd = NULL;
-    const char *pool;
-    size_t len;
-    int err;
-	int minor = -1;
-
-    ASSERT(conn);
-    ASSERT(request);
-    ASSERT(response);
-
-	minor = request->cookie;
-
-    vbd = tapdisk_server_get_vbd(minor);
-    if (!vbd) {
-        err = -ENODEV;
-		goto out;
-    }
-
-    blkif = &request->u.blkif;
-    len = strnlen(blkif->pool, sizeof(blkif->pool));
-    if (!len)
-        pool = NULL;
-    else if (len >= sizeof(blkif->pool)) {
-        err = -EINVAL;
-		goto out;
-    } else
-        pool = blkif->pool;
-
-    DPRINTF("connecting VBD %d domid=%d, devid=%d, pool %s, evt %d\n",
-            vbd->uuid, blkif->domid, blkif->devid, pool, blkif->port);
-
-    err = tapdisk_xenblkif_connect(blkif->domid, blkif->devid, blkif->gref,
-            blkif->order, blkif->port, blkif->proto, pool, vbd);
-
-out:
-	response->cookie = request->cookie;
-    if (!err)
-        response->type = TAPDISK_MESSAGE_XENBLKIF_CONNECT_RSP;
-    else
-		EPRINTF("VBD %d failed to connect to the shared ring: %s\n",
-				minor, strerror(-err));
-
-    return err;
-}
-
-static int
-tapdisk_control_xenblkif_disconnect(
-        struct tapdisk_ctl_conn *conn __attribute__((unused)),
-        tapdisk_message_t * request, tapdisk_message_t * const response)
-{
-    tapdisk_message_blkif_t *blkif_msg;
-	int err;
-
-    ASSERT(request);
-    ASSERT(response);
-
-    blkif_msg = &request->u.blkif;
-
-	ASSERT(blkif_msg);
-
-    DPRINTF("disconnecting domid=%d, devid=%d\n", blkif_msg->domid,
-            blkif_msg->devid);
-
-    err = tapdisk_xenblkif_disconnect(blkif_msg->domid, blkif_msg->devid);
-    if (!err)
-        response->type = TAPDISK_MESSAGE_XENBLKIF_DISCONNECT_RSP;
-	else
-		EPRINTF("failed to disconnect domid=%d, devid=%d from the "
-				"ring: %s\n", blkif_msg->domid, blkif_msg->devid,
-				strerror(-err));
-    return err;
-}
+//static int
+//tapdisk_control_xenblkif_connect(
+//        struct tapdisk_ctl_conn *conn __attribute__((unused)),
+//        tapdisk_message_t *request, tapdisk_message_t * const response)
+//{
+//    /*
+//     * Get the block interface parameters (domain ID, device ID, etc.).
+//     */
+//    tapdisk_message_blkif_t *blkif;
+//
+//    td_vbd_t *vbd = NULL;
+//    const char *pool;
+//    size_t len;
+//    int err;
+//	int minor = -1;
+//
+//    ASSERT(conn);
+//    ASSERT(request);
+//    ASSERT(response);
+//
+//	minor = request->cookie;
+//
+//    vbd = tapdisk_server_get_vbd(minor);
+//    if (!vbd) {
+//        err = -ENODEV;
+//		goto out;
+//    }
+//
+//    blkif = &request->u.blkif;
+//    len = strnlen(blkif->pool, sizeof(blkif->pool));
+//    if (!len)
+//        pool = NULL;
+//    else if (len >= sizeof(blkif->pool)) {
+//        err = -EINVAL;
+//		goto out;
+//    } else
+//        pool = blkif->pool;
+//
+//    DPRINTF("connecting VBD %d domid=%d, devid=%d, pool %s, evt %d\n",
+//            vbd->uuid, blkif->domid, blkif->devid, pool, blkif->port);
+//
+//    err = tapdisk_xenblkif_connect(blkif->domid, blkif->devid, blkif->gref,
+//            blkif->order, blkif->port, blkif->proto, pool, vbd);
+//
+//out:
+//	response->cookie = request->cookie;
+//    if (!err)
+//        response->type = TAPDISK_MESSAGE_XENBLKIF_CONNECT_RSP;
+//    else
+//		EPRINTF("VBD %d failed to connect to the shared ring: %s\n",
+//				minor, strerror(-err));
+//
+//    return err;
+//}
+//
+//static int
+//tapdisk_control_xenblkif_disconnect(
+//        struct tapdisk_ctl_conn *conn __attribute__((unused)),
+//        tapdisk_message_t * request, tapdisk_message_t * const response)
+//{
+//    tapdisk_message_blkif_t *blkif_msg;
+//	int err;
+//
+//    ASSERT(request);
+//    ASSERT(response);
+//
+//    blkif_msg = &request->u.blkif;
+//
+//	ASSERT(blkif_msg);
+//
+//    DPRINTF("disconnecting domid=%d, devid=%d\n", blkif_msg->domid,
+//            blkif_msg->devid);
+//
+//    err = tapdisk_xenblkif_disconnect(blkif_msg->domid, blkif_msg->devid);
+//    if (!err)
+//        response->type = TAPDISK_MESSAGE_XENBLKIF_DISCONNECT_RSP;
+//	else
+//		EPRINTF("failed to disconnect domid=%d, devid=%d from the "
+//				"ring: %s\n", blkif_msg->domid, blkif_msg->devid,
+//				strerror(-err));
+//    return err;
+//}
 
 static int
 tapdisk_control_disk_info(
@@ -1214,14 +1214,14 @@ struct tapdisk_control_info message_infos[] = {
 		.handler = tapdisk_control_detach_vbd,
 		.flags   = TAPDISK_MSG_VERBOSE,
 	},
-    [TAPDISK_MESSAGE_XENBLKIF_CONNECT] = {
-		.handler = tapdisk_control_xenblkif_connect,
-		.flags = TAPDISK_MSG_VERBOSE
-	},
-    [TAPDISK_MESSAGE_XENBLKIF_DISCONNECT] = {
-        .handler = tapdisk_control_xenblkif_disconnect,
-		.flags = TAPDISK_MSG_VERBOSE
-    },
+//    [TAPDISK_MESSAGE_XENBLKIF_CONNECT] = {
+//		.handler = tapdisk_control_xenblkif_connect,
+//		.flags = TAPDISK_MSG_VERBOSE
+//	},
+//    [TAPDISK_MESSAGE_XENBLKIF_DISCONNECT] = {
+//        .handler = tapdisk_control_xenblkif_disconnect,
+//		.flags = TAPDISK_MSG_VERBOSE
+//    },
     [TAPDISK_MESSAGE_DISK_INFO] = {
         .handler = tapdisk_control_disk_info,
         .flags = TAPDISK_MSG_VERBOSE
