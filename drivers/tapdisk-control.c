@@ -1544,3 +1544,4 @@ tapdisk_control_open(char **path)
 
 	return tapdisk_control_create_socket(path);
 }
+

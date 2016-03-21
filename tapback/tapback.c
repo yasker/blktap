@@ -740,3 +740,7 @@
 //
 //    return _pa->master.domid - _pb->master.domid;
 //}
+
+int main() {
+	return 0;
+}

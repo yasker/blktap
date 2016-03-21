@@ -3,7 +3,7 @@ AM_CFLAGS += -Werror
 # TODO add -Wextra
 
 AM_CPPFLAGS  = -D_GNU_SOURCE
-AM_CPPFLAGS += -I$(top_srcdir)/include
+AM_CPPFLAGS += -I$(top_srcdir)/include -L $(top_srcdir)/libs
 
 libexec_PROGRAMS = tapdisk
 
@@ -76,6 +76,7 @@ libtapdisk_la_SOURCES += tapdisk-fdreceiver.c
 libtapdisk_la_SOURCES += tapdisk-fdreceiver.h
 libtapdisk_la_SOURCES += md5.c
 libtapdisk_la_SOURCES += md5.h
+libtapdisk_la_SOURCES += tapdisk-tcmu.c
 
 libtapdisk_la_SOURCES += block-aio.c
 libtapdisk_la_SOURCES += block-aio.h
@@ -103,6 +104,7 @@ libtapdisk_la_LIBADD  = ../vhd/lib/libvhd.la
 libtapdisk_la_LIBADD += ../thin/libtapdiskthin.la
 libtapdisk_la_LIBADD += -laio
 libtapdisk_la_LIBADD += -lxenctrl
+libtapdisk_la_LIBADD += -ltcmu
 
 logrotatedir = $(sysconfdir)/logrotate.d
 dist_logrotate_DATA = blktap

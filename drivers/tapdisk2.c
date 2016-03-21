@@ -33,6 +33,7 @@
 
 void tdnbd_fdreceiver_start();
 void tdnbd_fdreceiver_stop();
+void td_tcmu_start();
 
 static void
 usage(const char *app, int err)
@@ -141,6 +142,9 @@ main(int argc, char *argv[])
 	 * a response to a tap-ctl message
 	 */
 	tdnbd_fdreceiver_start();
+
+	/* Start TCMU main thread */
+	td_tcmu_start();
 
 	err = tapdisk_server_run();
 
